@@ -4,7 +4,20 @@ import lightgbm as lgb
 from sklearn.metrics import mean_squared_error
 from keras.models import Sequential
 from keras.layers import Dense
+import krakenex
+import json
 
+# Initialize Kraken API client
+kraken = krakenex.API()
+
+# Get last 10 trades for the BTC/EUR trading pair
+response = kraken.query_public('Trades', {'pair': 'XXBTZEUR', 'since': '0'})
+if response['error']:
+    print(f"Error: {response['error']}")
+else:
+    trades = response['result']['XXBTZEUR']
+    for trade in trades.values():
+        print(f"{json.dumps(trade, indent=2)}\n")
 # Load the data
 df = pd.read_csv('bitcoin_data.csv')
 
